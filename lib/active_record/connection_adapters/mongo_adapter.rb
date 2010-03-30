@@ -36,12 +36,17 @@ module ActiveRecord
           parsed_sql = ActiveMongo::SQLParser.new(sql).parse
           table = parsed_sql[:table]
           coll = @connection.collection(table)
-          selector = query2selector(parsed_sql)
           rows = []
 
-          coll.find(selector).each do |row|
-            row['id'] = row['_id'].to_s if row
-            rows << row
+          if (count = parsed_sql[:count])
+            rows << {count => coll.count}
+          else
+            selector = query2selector(parsed_sql)
+
+            coll.find(selector).each do |row|
+              row['id'] = row['_id'].to_s if row
+              rows << row
+            end
           end
 
           rows

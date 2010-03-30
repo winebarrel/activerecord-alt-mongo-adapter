@@ -26,13 +26,13 @@ describe ActiveMongo do
     depts.length.should == Dept::DATA.length
   end
 
-  #it 'EMP: count' do
-  #  Emp.count.should == Emp::DATA.length
-  #end
+  it 'EMP: count' do
+    Emp.count.should == Emp::DATA.length
+  end
 
-  #it 'DATA: count' do
-  #  Dept.count.should == Dept::DATA.length
-  #end
+  it 'DATA: count' do
+    Dept.count.should == Dept::DATA.length
+  end
 
   after do
     Emp.teardown
