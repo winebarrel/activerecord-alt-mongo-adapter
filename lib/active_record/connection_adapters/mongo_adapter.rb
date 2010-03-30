@@ -83,7 +83,6 @@ module ActiveRecord
       end
 
       def delete_sql(sql, name = nil)
-        p sql
         log(sql, name) do
           parsed_sql = ActiveMongo::SQLParser.new(sql).parse
           table = parsed_sql[:table]
