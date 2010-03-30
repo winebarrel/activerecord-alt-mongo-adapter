@@ -3,7 +3,45 @@ require 'active_record'
 require 'active_mongo/collection'
 require 'mongo' # for test
 
-# model
+# global setup  ###############################################################
+
+Mongo::Connection.new.drop_database('scott')
+ActiveRecord::Base.establish_connection(:adapter  => 'mongo', :database => 'scott')
+
+# spec ########################################################################
+
+describe ActiveMongo do
+  before do
+    Emp.setup
+    Dept.setup
+  end
+
+  it 'EMP: find(:all)' do
+    emps = Emp.find(:all).sort_by {|i| i.empno }
+    emps.length.should == Emp::DATA.length
+  end
+
+  it 'DEPT: find(:all)' do
+    depts = Dept.find(:all).sort_by {|i| i.deptno }
+    depts.length.should == Dept::DATA.length
+  end
+
+  #it 'EMP: count' do
+  #  Emp.count.should == Emp::DATA.length
+  #end
+
+  #it 'DATA: count' do
+  #  Dept.count.should == Dept::DATA.length
+  #end
+
+  after do
+    Emp.teardown
+    Dept.teardown
+  end
+end
+
+# model #######################################################################
+
 class Emp < ActiveRecord::Base
   include ActiveMongo::Collection
 
@@ -73,39 +111,3 @@ class Dept < ActiveRecord::Base
     end
   end
 end
-
-# global setup
-Mongo::Connection.new.drop_database('scott')
-ActiveRecord::Base.establish_connection(:adapter  => 'mongo', :database => 'scott')
-
-# spec
-describe ActiveMongo do
-  before do
-    Emp.setup
-    Dept.setup
-  end
-
-  it 'EMP: find(:all)' do
-    emps = Emp.find(:all).sort_by {|i| i.empno }
-    emps.length.should == Emp::DATA.length
-  end
-
-  it 'DEPT: find(:all)' do
-    depts = Dept.find(:all).sort_by {|i| i.deptno }
-    depts.length.should == Dept::DATA.length
-  end
-
-  #it 'EMP: count' do
-  #  Emp.count.should == Emp::DATA.length
-  #end
-
-  #it 'DATA: count' do
-  #  Dept.count.should == Dept::DATA.length
-  #end
-
-  after do
-    Emp.teardown
-    Dept.teardown
-  end
-end
-
