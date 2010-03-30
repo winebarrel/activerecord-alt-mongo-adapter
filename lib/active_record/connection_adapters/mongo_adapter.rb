@@ -1,7 +1,7 @@
 require 'active_record/base'
 require 'active_record/connection_adapters/abstract_adapter'
 require 'mongo'
-require 'active_mongo/collections'
+require 'active_mongo/collection'
 require 'active_mongo/sqlparser.tab'
 
 module ActiveRecord

@@ -1,5 +1,5 @@
 module ActiveMongo
-  module Collections
+  module Collection
     def self.included(mod)
       mod.instance_eval %{
         primary_key = ActiveRecord::ConnectionAdapters::Column.new('id', nil)
