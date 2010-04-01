@@ -19,11 +19,19 @@ describe ActiveMongo do
   it 'EMP: find(:all)' do
     emps = Emp.find(:all).sort_by {|i| i.empno }
     emps.length.should == Emp::DATA.length
+
+    emps.each_with_index do |emp, i|
+      emp.should == Emp::DATA[i]
+    end
   end
 
   it 'DEPT: find(:all)' do
     depts = Dept.find(:all).sort_by {|i| i.deptno }
     depts.length.should == Dept::DATA.length
+
+    depts.each_with_index do |dept, i|
+      dept.should == Dept::DATA[i]
+    end
   end
 
   it 'EMP: count' do
