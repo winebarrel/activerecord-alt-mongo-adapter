@@ -128,6 +128,7 @@ class Emp < ActiveRecord::Base
   end
 
   def ==(obj)
+    p :x
     NAMES.all? do |name|
       self.send(name) == obj[name] and self[name] == obj[name]
     end
