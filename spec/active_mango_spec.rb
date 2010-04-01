@@ -86,6 +86,20 @@ describe ActiveMongo do
     Dept.count(:limit => 2).should == 2
   end
 
+  it 'EMP: save' do
+    emp = Emp.find(:first, :conditions => ["empno = 7782"])
+    emp.should_not be_nil
+
+    emp.job = 'ANALYST'
+    emp.age = 48
+    emp.save.should be_true
+
+    emp = Emp.find(:first, :conditions => ["empno = 7782"])
+    emp.should_not be_nil
+    emp['job'].should == 'ANALYST'
+    emp.age.should == 48
+  end
+
   after do
     Emp.teardown
     Dept.teardown
