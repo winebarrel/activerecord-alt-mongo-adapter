@@ -42,6 +42,17 @@ describe ActiveMongo do
     Dept.count(:conditions => ['deptno >= ?', 30]).should == Dept::DATA.select {|i| i['deptno'] >= 30 }.length
   end
 
+  it 'EMP: order asc' do
+    emps = Emp.find(:all, :conditions => {:job => 'MANAGER'}, :order = 'sal')
+    expected = Emp::DATA.select {|i| i['job'] == 'MANAGER' }.order_by {|i| i['sal'] }
+    p expected
+  end
+
+  it 'DATA: count with cond' do
+    #depts = Dept.find(:all, :conditions => {:job => 'MANAGER'}, :order = 'sal')
+    #expected = Dept::DATA.select {|i| i['deptno'] >= 30 }.l
+  end
+
   after do
     Emp.teardown
     Dept.teardown
