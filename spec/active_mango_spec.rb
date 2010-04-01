@@ -25,6 +25,13 @@ describe ActiveMongo do
     end
   end
 
+  it 'EMP: find multi cond' do
+    emps = Emp.find(:all, :collections = ['job = ? and deptno > ?', 'MANAGER', 10]).sort_by {|i| i.empno }
+    expected = Emp::DATA.select {|i| i['job'] == 'MANAGER' and i['deptno'] > 10 }
+    emps.length.should == expected.length
+    emps.map {|i| i['empno'] }.should == expected.map {|i| i['empno'] }
+  end
+
   it 'DEPT: find(:all)' do
     depts = Dept.find(:all).sort_by {|i| i.deptno }
     depts.length.should == Dept::DATA.length
