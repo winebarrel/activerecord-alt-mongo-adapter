@@ -66,6 +66,26 @@ describe ActiveMongo do
     depts.map {|i| i['deptno'] }.should == expected.map {|i| i['deptno'] }
   end
 
+  it 'EMP: find limit' do
+    emps = Emp.find(:all, :limit => 5)
+    emps.length.should == 5
+  end
+
+  it 'DEPT: find limit' do
+    depts = Dept.find(:all, :limit => 3)
+    depts.length.should == 3
+  end
+
+  it 'EMP: find limit sort' do
+    emps = Emp.find(:all, :conditions => {:job => 'MANAGER'}, :limit => 2, :order => 'empno desc')
+    expected = Emp::DATA.select {|i| i['job'] == 'MANAGER' }.sort_by {|i| i['empno'] }.reverse.slice(0, 2)
+    emps.map {|i| i['empno'] }.should == expected.map {|i| i['empno'] }
+  end
+
+  it 'DEPT: count limit' do
+    Dept.count(:limit => 2).should == 2
+  end
+
   after do
     Emp.teardown
     Dept.teardown

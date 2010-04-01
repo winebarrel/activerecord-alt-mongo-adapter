@@ -17,7 +17,7 @@ rule
                           }
                         | SELECT count_clause FROM id where_clause order_by_clause limit_clause offset_clause
                           {
-                            {:command => :select, :table => val[3], :count => val[1], :condition => val[4]}
+                            {:command => :select, :table => val[3], :count => val[1], :condition => val[4], :order => val[5], :limit => val[6], :offset => val[7]}
                           }
 
   count_clause          : COUNT '(' count_arg ')'

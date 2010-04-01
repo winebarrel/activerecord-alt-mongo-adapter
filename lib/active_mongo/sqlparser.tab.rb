@@ -15,7 +15,7 @@ module ActiveMongo
 
 class SQLParser < Racc::Parser
 
-module_eval <<'..end sqlparser.y modeval..ida8e8bf8c75', 'sqlparser.y', 201
+module_eval <<'..end sqlparser.y modeval..idb07802d36a', 'sqlparser.y', 201
 
 KEYWORDS = %w(
   AND
@@ -87,7 +87,7 @@ def parse
   yyparse self, :scan
 end
 
-..end sqlparser.y modeval..ida8e8bf8c75
+..end sqlparser.y modeval..idb07802d36a
 
 ##### racc 1.4.5 generates ###
 
@@ -414,7 +414,7 @@ module_eval <<'.,.,', 'sqlparser.y', 17
 
 module_eval <<'.,.,', 'sqlparser.y', 21
   def _reduce_7( val, _values)
-                            {:command => :select, :table => val[3], :count => val[1], :condition => val[4]}
+                            {:command => :select, :table => val[3], :count => val[1], :condition => val[4], :order => val[5], :limit => val[6], :offset => val[7]}
   end
 .,.,
 

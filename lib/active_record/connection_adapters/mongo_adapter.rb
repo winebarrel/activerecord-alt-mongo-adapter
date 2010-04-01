@@ -139,6 +139,10 @@ module ActiveRecord
           opts[:sort] = [name, type]
         end
 
+        if limit
+          opts[:limit] = limit.to_i
+        end
+
         opts
       end
 
