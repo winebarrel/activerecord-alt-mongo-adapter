@@ -34,6 +34,14 @@ describe ActiveMongo do
     Dept.count.should == Dept::DATA.length
   end
 
+  it 'EMP: count' do
+    Emp.count(:conditions => ['job = ?', 'MANAGER']).should == Emp::DATA.length
+  end
+
+  it 'DATA: count' do
+    Dept.count.should == Dept::DATA.length
+  end
+
   after do
     Emp.teardown
     Dept.teardown
