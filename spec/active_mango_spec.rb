@@ -94,10 +94,22 @@ describe ActiveMongo do
     emp.age = 48
     emp.save.should be_true
 
-    emp = Emp.find(:first, :conditions => ["empno = 7782"])
-    emp.should_not be_nil
-    emp['job'].should == 'ANALYST'
-    emp.age.should == 48
+    emps = Emp.find(:all, :conditions => ["age = 48"])
+    emps.length.should == 1
+    emps[0].should_not be_nil
+    emps[0].empno.should == 7782
+    emps[0]['job'].should == 'ANALYST'
+    emps[0].age.should == 48
+  end
+
+  it 'DATA: update all' do
+    Dept.update_all('age = 20', ['deptno >= ?', 20])
+
+    Dept.find(:all).each do |dept|
+      if dept.deptno >= 20
+        dept.age.should == 20
+      end
+    end
   end
 
   after do

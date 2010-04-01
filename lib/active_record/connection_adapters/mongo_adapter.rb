@@ -83,7 +83,7 @@ module ActiveRecord
             doc[k] = v
           end
 
-          coll.update(selector, {'$set' => doc})
+          coll.update(selector, {'$set' => doc}, :multi => true)
         end
 
         # XXX:
