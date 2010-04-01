@@ -43,14 +43,19 @@ describe ActiveMongo do
   end
 
   it 'EMP: order asc' do
-    emps = Emp.find(:all, :conditions => {:job => 'MANAGER'}, :order = 'sal')
-    expected = Emp::DATA.select {|i| i['job'] == 'MANAGER' }.order_by {|i| i['sal'] }
-    p expected
+    emps = Emp.find(:all, :conditions => {:job => 'MANAGER'}, :order => 'sal')
+    expected = Emp::DATA.select {|i| i['job'] == 'MANAGER' }.sort_by {|i| i['sal'] }
+    emps.map {|i| i['empno'] }.should == expected.map {|i| i['empno'] }
+
+    emps = Emp.find(:all, :conditions => {:job => 'SALESMAN'}, :order => 'sal asc')
+    expected = Emp::DATA.select {|i| i['job'] == 'SALESMAN' }.sort_by {|i| i['sal'] }
+    emps.map {|i| i['empno'] }.should == expected.map {|i| i['empno'] }
   end
 
-  it 'DATA: count with cond' do
-    #depts = Dept.find(:all, :conditions => {:job => 'MANAGER'}, :order = 'sal')
-    #expected = Dept::DATA.select {|i| i['deptno'] >= 30 }.l
+  it 'DATA: order desc' do
+    depts = Dept.find(:all, :order => 'deptno desc')
+    expected = Dept::DATA.sort_by {|i| i['deptno'] }.reverse
+    depts.map {|i| i['deptno'] }.should == expected.map {|i| i['deptno'] }
   end
 
   after do
@@ -71,7 +76,7 @@ class Emp < ActiveRecord::Base
     [7499, 'ALLEN'       , 'SALESMAN'       , 7698, '20-FEB-1981', 1600.0,  300.0,  30],
     [7521, 'WARD'        , 'SALESMAN'       , 7698, '22-FEB-1981', 1250.0,  500.0,  30],
     [7566, 'JONES'       , 'MANAGER'        , 7839, '2-APR-1981' , 2975.0,    nil,  20],
-    [7654, 'MARTIN'      , 'SALESMAN'       , 7698, '28-SEP-1981', 1250.0, 1400.0,  30],
+    [7654, 'MARTIN'      , 'SALESMAN'       , 7698, '28-SEP-1981', 1250.1, 1400.0,  30],
     [7698, 'BLAKE'       , 'MANAGER'        , 7839, '1-MAY-1981' , 2850.0,    nil,  30],
     [7782, 'CLARK'       , 'MANAGER'        , 7839, '9-JUN-1981' , 2450.0,    nil,  10],
     [7788, 'SCOTT'       , 'ANALYST'        , 7566, '09-DEC-1982', 3000.0,    nil,  20],
