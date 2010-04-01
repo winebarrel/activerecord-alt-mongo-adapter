@@ -107,7 +107,7 @@ rule
 
   ordering_spec         :
                           {
-                            -1
+                            :asc
                           }
                         | order_spec
 
@@ -186,8 +186,8 @@ rule
                         | '<'    { '$lt'     }
                         | '='    { '$eq'     }
 
-  order_spec            : ASC  { -1 }
-                        | DESC {  1 }
+  order_spec            : ASC  { :asc  }
+                        | DESC { :desc }
 
 end
 

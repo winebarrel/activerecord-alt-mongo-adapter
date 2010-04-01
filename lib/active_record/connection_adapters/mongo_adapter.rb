@@ -36,20 +36,23 @@ module ActiveRecord
           parsed_sql = ActiveMongo::SQLParser.new(sql).parse
           table = parsed_sql[:table]
           coll = @connection.collection(table)
-          rows = []
 
-          if (count = parsed_sql[:count])
-            rows << {count => coll.count}
+          count = parsed_sql[:count]
+          selector = query2selector(parsed_sql)
+          opts = query2opts(parsed_sql)
+
+          if count and selector.empty? and opts.empty?
+            [{count => coll.count}]
           else
-            selector = query2selector(parsed_sql)
+            rows = []
 
-            coll.find(selector).each do |row|
+            coll.find(selector, opts).each do |row|
               row['id'] = row['_id'].to_s if row
               rows << row
             end
-          end
 
-          rows
+            count ? [{count => rows.length}] : rows
+          end
         end
       end
 
@@ -102,7 +105,7 @@ module ActiveRecord
 
       private
       def query2selector(parsed_sql)
-        condition, order, limit = parsed_sql.values_at(:condition, :order, :limit)
+        condition = parsed_sql[:condition]
         condition ||= []
         selector = {}
 
@@ -125,6 +128,18 @@ module ActiveRecord
         end
 
         selector
+      end
+
+      def query2opts(parsed_sql)
+        order, limit = parsed_sql.values_at(:order, :limit)
+        opts = {}
+
+        if order
+          name, type = order.values_at(:name, :type)
+          opts[:sort] = [name, type]
+        end
+
+        opts
       end
 
       def is_cond?(condition)
