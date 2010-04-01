@@ -34,12 +34,12 @@ describe ActiveMongo do
     Dept.count.should == Dept::DATA.length
   end
 
-  it 'EMP: count' do
-    Emp.count(:conditions => ['job = ?', 'MANAGER']).should == Emp::DATA.length
+  it 'EMP: count with cond' do
+    Emp.count(:conditions => ['job = ?', 'MANAGER']).should == Emp::DATA.select {|i| i['job'] == 'MANAGER' }.length
   end
 
-  it 'DATA: count' do
-    Dept.count.should == Dept::DATA.length
+  it 'DATA: count with cond' do
+    Dept.count(:conditions => ['deptno >= ?', 30]).should == Dept::DATA.select {|i| i['deptno'] >= 30 }.length
   end
 
   after do
