@@ -111,17 +111,30 @@ module ActiveRecord
 
         if is_cond?(condition)
           condition.each do |c|
-            name, op, expr = c.values_at(:name, :op, :expr)
+            name, op, expr, has_not = c.values_at(:name, :op, :expr, :not)
             name = name.split('.').last
+            op_expr = nil
 
             case op
             when '$eq'
-              selector[name] = expr
+              op_expr = expr
             when '$regexp'
-              selector[name] = Regexp.compile(expr)
+              op_expr = Regexp.compile(expr)
             else
-              selector[name] = {op => expr}
+              op_expr = {op => expr}
             end
+
+            if has_not
+              if op == '$eq'
+                op_expr = {'$ne' => expr}
+              elsif op == '$ne'
+                op_expr = expr
+              else
+                op_expr = {'$not' => op_expr}
+              end
+            end
+
+            selector[name] = op_expr
           end
         else
           selector['_id'] = {'$in' => [condition].flatten.map {|i| Mongo::ObjectID.from_string(i) }}

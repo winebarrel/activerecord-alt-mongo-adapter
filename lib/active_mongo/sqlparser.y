@@ -85,6 +85,10 @@ rule
                           {
                             {:name => val[0], :op => val[1], :expr => val[2]}
                           }
+                        | NOT id op value
+                          {
+                            {:name => val[1], :op => val[2], :expr => val[3], :not => true}
+                          }
                         | id op '(' value_list ')'
                           {
                             {:name => val[0], :op => val[1], :expr => val[3]}

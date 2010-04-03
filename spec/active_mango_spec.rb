@@ -227,6 +227,28 @@ describe ActiveMongo do
     end
   end
 
+  it 'EMP: not' do
+    emps = Emp.find(:all, :conditions => ['not empno = 7566'], :order => 'empno')
+    expected = Emp::DATA.select {|i| i['empno'] != 7566 }
+    emps.length.should == expected.length
+
+    emps.each_with_index do |emp, i|
+      emp.should == expected[i]
+      emp.empno.should_not == 7566
+    end
+  end
+
+  it 'EMP: not ne' do
+    emps = Emp.find(:all, :conditions => ['not empno <> 7566'], :order => 'empno')
+    expected = Emp::DATA.select {|i| i['empno'] == 7566 }
+    emps.length.should == expected.length
+
+    emps.each_with_index do |emp, i|
+      emp.should == expected[i]
+      emp.empno.should == 7566
+    end
+  end
+
   after do
     Emp.teardown
     Dept.teardown
