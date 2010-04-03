@@ -193,6 +193,40 @@ describe ActiveMongo do
     end
   end
 
+  it 'DEPT: create' do
+    dept1 = Dept.create(
+      :deptno => 1,
+      :foo = 'bar',
+      :zoo = 'baz'
+    ).should be_true
+
+    Dept.create!(
+      :deptno => 1,
+      :hoge = 'fuga',
+      :hogera = 'hogehoge'
+    )
+
+    depts = Dept.find(:all, :order => 'deptno')
+    depts.length.should == Dept::DATA.length + 2
+
+    depts.each_with_index do |dept, i|
+      case dept.deptno
+      when 1
+        dept = dept.attributes
+        dept.delete('id').should_not be_nil
+        dept.delete('_id').should_not be_nil
+        dept.should == { 'deptno' => 1, 'foo' => 'bar', 'zoo' => 'baz' }
+      when 2
+        dept = dept.attributes
+        dept.delete('id').should_not be_nil
+        dept.delete('_id').should_not be_nil
+        dept.should == { 'deptno' => 2, 'hoge' => 'fuga', 'hogera' => 'hogehoge' }
+      else
+        dept.should == Dept::DATA[i - 2]
+      end
+    end
+  end
+
   after do
     Emp.teardown
     Dept.teardown
