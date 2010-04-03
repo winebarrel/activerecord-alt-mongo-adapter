@@ -484,6 +484,28 @@ describe ActiveMongo do
     depts.map {|i| i['deptno'] }.should == [2] + Dept::DATA.map {|i| i['deptno'] }
   end
 
+  it 'examples' do
+    emp = Emp.find(:first, 
+            :conditions => ["job = ? and sal >= ?", "MANAGER", 2800],
+            :order => 'sal desc', :limit => 3, :offset => 1)
+
+    p emp.id #=> 4bb795e8f15d3d0324000006
+    emp.age = 30
+    emp.save
+    
+    emp_list = Emp.find(:all, :conditions => {:empno => [7654, 7698, 7782]})
+    
+    emp_list.each do |i|
+      i.destroy if i.sal < 2000
+    end
+    
+    new_emp = Emp.new
+    new_emp.empno = 8000
+    new_emp.ename = 'YAMADA'
+    new_emp.age   = 27
+    new_emp.save!
+  end
+
   after do
     Emp.teardown
     Dept.teardown

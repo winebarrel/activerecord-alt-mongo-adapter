@@ -1,0 +1,101 @@
+= ActiveTokyoCabinet
+
+Copyright (c) 2010 SUGAWARA Genki <sgwr_dts@yahoo.co.jp>
+
+== Description
+
+activerecord-alt-mongo-adapter is a MongoDB adapter for ActiveRecord.
+
+activerecord-alt-mongo-adapter on MongoDB Ruby Driver.
+
+see http://www.mongodb.org/display/DOCS/Home , http://api.mongodb.org/ruby/0.18.3/index.html
+
+== Project Page
+
+http://rubyforge.org/projects/araltmongo/
+
+== Install
+
+gem install activerecord-alt-mongo-adapter
+
+== Example
+=== database.yml
+
+    development:
+      adapter:  mongo,
+      host:     localhost
+      port:     27017
+      database: scott
+
+=== Model
+
+    class Emp < ActiveRecord::Base
+      include ActiveMongo::Collection
+      # There is no need to define a schema.
+    end
+
+=== ActiveRecord API
+
+    # see http://api.rubyonrails.org/classes/ActiveRecord/Base.html
+    
+    emp = Emp.find(:first, 
+            :conditions => ["job = ? and sal >= ?", "MANAGER", 2800],
+            :order => 'sal desc', :limit => 3, :offset => 1)
+
+    p emp.id #=> "4bb795e8f15d3d0324000006"
+    emp.age = 30
+    emp.save
+    
+    emp_list = Emp.find(:all, :conditions => {:empno => [7654, 7698, 7782]})
+    
+    emp_list.each do |i|
+      i.destroy if i.sal < 2000
+    end
+    
+    new_emp = Emp.new
+    new_emp.empno = 8000
+    new_emp.ename = 'YAMADA'
+    new_emp.age   = 27
+    new_emp.save!
+    
+    # not available:
+    # - :include, :group
+    # - `OR'
+    # - Include `ID' in search condition
+    # http://araltmongo.rubyforge.org/svn/trunk/lib/active_mongo/sqlparser.y
+
+=== Expanded operator
+
+    # see http://www.mongodb.org/display/DOCS/Advanced+Queries
+    
+    emp = Emp.find(:all, :conditions => ['job regexp ?', 'LE'])
+    
+    emp = Emp.find(:all, :conditions => ['empno mod ?', [2, 0]])
+    
+    emp = Emp.find(:all, :conditions => ['foo exists ?', true])
+
+=== Low layer API
+
+    coll = Emp.collection
+    
+    m =<<-EOS
+      function() {
+        emit(this.job, 1);
+      }
+    EOS
+    
+    r =<<-EOS
+      function(k, vals) {
+        var sum = 0;
+    
+        for(var i in vals) {
+          sum += vals[i];
+        }
+    
+        return sum;
+      }
+    EOS
+    
+    coll.map_reduce(m, r).find.each do |i|
+      # do anything
+    end
