@@ -119,8 +119,8 @@ describe ActiveMongo do
     end
   end
 
-  it 'EMP: destoroy' do
-    emp = Emp.find(:first, :conditions => ["empno = 7566"])
+  it 'EMP: destroy' do
+    emp = Emp.find(:first, :conditions => ['empno = 7566'])
     emp.destroy
 
     emps = Emp.find(:all, :order => 'empno')
@@ -130,6 +130,32 @@ describe ActiveMongo do
     emps.each_with_index do |emp, i|
       emp.should == expected[i]
       emp.empno.should_not == 7566
+    end
+  end
+
+  it 'EMP: destroy all' do
+    Emp.destroy_all(['job = ?', 'SALESMAN'])
+
+    emps = Emp.find(:all, :order => 'empno')
+    expected = Emp::DATA.select {|i| i['job'] != 'SALESMAN' }
+    emps.length.should == expected.length
+
+    emps.each_with_index do |emp, i|
+      emp.should == expected[i]
+      emp.job.should_not == 'SALESMAN'
+    end
+  end
+
+  it 'DEPT: delete all' do
+    Dept.delete_all(['deptno > 20'])
+
+    depts = Dept.find(:all, :order => 'deptno')
+    expected = Dept::DATA.select {|i| not i['deptno'] > 20 }
+    depts.length.should == expected.length
+
+    depts.each_with_index do |dept, i|
+      dept.should == expected[i]
+      dept.deptno.should_not > 20
     end
   end
 
