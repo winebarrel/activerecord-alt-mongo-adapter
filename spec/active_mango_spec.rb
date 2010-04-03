@@ -410,6 +410,26 @@ describe ActiveMongo do
     end
   end
 
+  it 'EMP: mod' do
+    emps = Emp.find(:all, :conditions => ['empno mod (?)', [2, 0]], :order => 'empno')
+    expected = Emp::DATA.select {|i| (i['empno'] % 2) == 0 }
+    emps.length.should == expected.length
+
+    emps.each_with_index do |emp, i|
+      emp.should == expected[i]
+    end
+  end
+
+  it 'EMP: not mod' do
+    emps = Emp.find(:all, :conditions => ['not empno mod (?)', [2, 0]], :order => 'empno')
+    expected = Emp::DATA.select {|i| (i['empno'] % 2) != 0 }
+    emps.length.should == expected.length
+
+    emps.each_with_index do |emp, i|
+      emp.should == expected[i]
+    end
+  end
+
   after do
     Emp.teardown
     Dept.teardown

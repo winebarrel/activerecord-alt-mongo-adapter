@@ -97,6 +97,10 @@ rule
                           {
                             {:name => val[0], :op => val[1], :expr => val[3]}
                           }
+                        | NOT id op '(' value_list ')'
+                          {
+                            {:name => val[1], :op => val[2], :expr => val[4], :not => true}
+                          }
                         | between_predicate
                         | not_in_predicate
 
