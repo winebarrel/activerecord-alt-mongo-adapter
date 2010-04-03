@@ -98,7 +98,7 @@ rule
 
   between_predicate     : id BETWEEN value AND value
                           {
-                            {:name => val[0], :op => '$between', :expr => [val[2], val[4]]}
+                            {:name => val[0], :op => '$bt', :expr => [val[2], val[4]]}
                           }
 
   not_in_predicate     : id NOT IN '(' value_list ')'
