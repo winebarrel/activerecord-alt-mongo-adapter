@@ -280,8 +280,18 @@ describe ActiveMongo do
   end
 
   it 'DEPT: find conds' do
-    depts = Dept.find(:all, :conditions => ['deptno >= ? and deptno < ?', 20, 40], :order => 'deptnoa')
+    depts = Dept.find(:all, :conditions => ['deptno >= ? and deptno < ?', 20, 40], :order => 'deptno')
     expected = Dept::DATA.select {|i| i['deptno'] >= 20 and i['deptno'] < 40 }
+    depts.length.should == expected.length
+
+    depts.each_with_index do |dept, i|
+      dept.should == expected[i]
+    end
+  end
+
+  it 'DEPT: find between' do
+    depts = Dept.find(:all, :conditions => ['deptno between ? and  ?', 20, 40], :order => 'deptno')
+    expected = Dept::DATA.select {|i| 20 <= i['deptno'] and i['deptno'] <= 40 }
     depts.length.should == expected.length
 
     depts.each_with_index do |dept, i|

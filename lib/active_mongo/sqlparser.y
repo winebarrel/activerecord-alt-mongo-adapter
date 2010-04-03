@@ -93,7 +93,13 @@ rule
                           {
                             {:name => val[0], :op => val[1], :expr => val[3]}
                           }
+                        | between_predicate
                         | not_in_predicate
+
+  between_predicate     : id BETWEEN value AND value
+                          {
+                            {:name => val[0], :op => '$between', :expr => [val[2], val[4]]}
+                          }
 
   not_in_predicate     : id NOT IN '(' value_list ')'
                           {
@@ -207,6 +213,7 @@ KEYWORDS = %w(
   AND
   AS
   ASC
+  BETWEEN
   BY
   COUNT
   DELETE

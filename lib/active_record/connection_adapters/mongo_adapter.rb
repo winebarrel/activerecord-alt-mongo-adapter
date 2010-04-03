@@ -120,6 +120,8 @@ module ActiveRecord
               op_expr = expr
             when '$regexp'
               op_expr = Regexp.compile(expr)
+            when '$between'
+              op_expr = {'$gte' => expr[0], '$lte' => expr[1]}
             else
               op_expr = {op => expr}
             end
