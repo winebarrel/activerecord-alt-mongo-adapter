@@ -63,8 +63,9 @@ module ActiveMongo
       }
 
       mod.instance_eval %{
-        def open
-          yield(self.connection.raw_connection.collection(self.table_name))
+        def collection
+          coll = self.connection.raw_connection.collection(self.table_name)
+          block_given? ? yield(coll) : coll
         end
       }
     end

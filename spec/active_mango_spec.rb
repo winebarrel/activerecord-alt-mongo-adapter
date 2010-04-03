@@ -309,10 +309,45 @@ describe ActiveMongo do
     end
   end
 
-  it 'EMP: open' do
+  it 'EMP: collection' do
+    actual = {}
+    coll = Emp.collection
+
+    m =<<-EOS
+      function() {
+        emit(this.job, 1);
+      }
+    EOS
+
+    r =<<-EOS
+      function(k, vals) {
+        var sum = 0;
+
+        for(var i in vals) {
+          sum += vals[i];
+        }
+
+        return sum;
+      }
+    EOS
+
+    coll.map_reduce(m, r).find.each do |i|
+      actual[i['_id']] = i['value'].to_i
+    end
+
+    actual.should == {
+      'ANALYST'   => 2,
+      'CLERK'     => 4,
+      'MANAGER'   => 3,
+      'PRESIDENT' => 1,
+      'SALESMAN'  => 4
+    }
+  end
+
+  it 'EMP: collection with block' do
     actual = {}
 
-    Emp.open do |coll|
+    Emp.collection do |coll|
       m =<<-EOS
         function() {
           emit(this.job, 1);
