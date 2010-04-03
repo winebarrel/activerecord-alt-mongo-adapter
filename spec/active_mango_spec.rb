@@ -345,6 +345,26 @@ describe ActiveMongo do
     }
   end
 
+  it 'EMP: in' do
+    # String
+    emps = Emp.find(:all, :conditions => ['job in (?)', ['SALESMAN', 'MANAGER']], :order => 'empno')
+    expected = Emp::DATA.select {|i| ['SALESMAN', 'MANAGER'].include?(i['job']) }
+    emps.length.should == expected.length
+
+    emps.each_with_index do |emp, i|
+      emp.should == expected[i]
+    end
+
+    # Hash
+    emps = Emp.find(:all, :conditions => {:job => ['SALESMAN', 'MANAGER']}, :order => 'empno')
+    expected = Emp::DATA.select {|i| ['SALESMAN', 'MANAGER'].include?(i['job']) }
+    emps.length.should == expected.length
+
+    emps.each_with_index do |emp, i|
+      emp.should == expected[i]
+    end
+  end
+
   after do
     Emp.teardown
     Dept.teardown
