@@ -127,6 +127,8 @@ module ActiveRecord
               op_expr = Regexp.compile(expr)
             when '$bt'
               op_expr = {'$gte' => expr[0], '$lte' => expr[1]}
+            when '$exists'
+              op_expr = {'$exists' => !(expr =~ /f|false/i)}
             else
               op_expr = {op => expr}
             end
