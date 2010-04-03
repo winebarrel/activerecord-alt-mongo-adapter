@@ -365,6 +365,16 @@ describe ActiveMongo do
     end
   end
 
+  it 'EMP: not in' do
+    emps = Emp.find(:all, :conditions => ['job not in (?)', ['SALESMAN', 'MANAGER']], :order => 'empno')
+    expected = Emp::DATA.select {|i| not ['SALESMAN', 'MANAGER'].include?(i['job']) }
+    emps.length.should == expected.length
+
+    emps.each_with_index do |emp, i|
+      emp.should == expected[i]
+    end
+  end
+
   after do
     Emp.teardown
     Dept.teardown
