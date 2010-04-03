@@ -250,13 +250,22 @@ describe ActiveMongo do
   end
 
   it 'EMP: regexp' do
-    emps = Emp.find(:all, :conditions => ['job regexp = ?', 'LE'], :order => 'empno')
-    expected = Emp::DATA.select {|i| i['empno'] =~ /LE/ }
+    emps = Emp.find(:all, :conditions => ['job regexp ?', 'LE'], :order => 'empno')
+    expected = Emp::DATA.select {|i| i['job'] =~ /LE/ }
     emps.length.should == expected.length
 
     emps.each_with_index do |emp, i|
       emp.should == expected[i]
-      emp.empno.should_not == 7566
+    end
+  end
+
+  it 'EMP: not regexp' do
+    emps = Emp.find(:all, :conditions => ['not job regexp ?', 'LE'], :order => 'empno')
+    expected = Emp::DATA.select {|i| i['job'] !~ /LE/ }
+    emps.length.should == expected.length
+
+    emps.each_with_index do |emp, i|
+      emp.should == expected[i]
     end
   end
 
