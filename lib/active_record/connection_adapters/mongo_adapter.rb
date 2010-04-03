@@ -144,7 +144,7 @@ module ActiveRecord
       end
 
       def query2opts(parsed_sql)
-        order, limit = parsed_sql.values_at(:order, :limit)
+        order, limit, offset = parsed_sql.values_at(:order, :limit, :offset)
         opts = {}
 
         if order
@@ -154,6 +154,10 @@ module ActiveRecord
 
         if limit
           opts[:limit] = limit.to_i
+        end
+
+        if offset
+          opts[:skip] = offset.to_i
         end
 
         opts

@@ -269,6 +269,16 @@ describe ActiveMongo do
     end
   end
 
+  it 'EMP: find limit offset' do
+    emps = Emp.find(:all, :limit => 3, :offset => 5, :order => 'empno')
+    expected = Emp::DATA.slice(5..7)
+    emps.length.should == expected.length
+    
+    emps.each_with_index do |emp, i|
+      emp.should == expected[i]
+    end
+  end
+
   after do
     Emp.teardown
     Dept.teardown
