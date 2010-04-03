@@ -273,9 +273,19 @@ describe ActiveMongo do
     emps = Emp.find(:all, :limit => 3, :offset => 5, :order => 'empno')
     expected = Emp::DATA.slice(5..7)
     emps.length.should == expected.length
-    
+
     emps.each_with_index do |emp, i|
       emp.should == expected[i]
+    end
+  end
+
+  it 'DEPT: find conds' do
+    depts = Dept.find(:all, :conditions => ['deptno >= ? and deptno < ?', 20, 40], :order => 'deptnoa')
+    expected = Dept::DATA.select {|i| i['deptno'] >= 20 and i['deptno'] < 40 }
+    depts.length.should == expected.length
+
+    depts.each_with_index do |dept, i|
+      dept.should == expected[i]
     end
   end
 

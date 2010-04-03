@@ -134,7 +134,11 @@ module ActiveRecord
               end
             end
 
-            selector[name] = op_expr
+            if selector[name].kind_of?(Hash) and op_expr.kind_of?(Hash)
+              selector[name] = selector[name].merge(op_expr)
+            else
+              selector[name] = op_expr
+            end
           end
         else
           selector['_id'] = {'$in' => [condition].flatten.map {|i| Mongo::ObjectID.from_string(i) }}
