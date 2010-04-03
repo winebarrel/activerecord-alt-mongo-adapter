@@ -159,6 +159,40 @@ describe ActiveMongo do
     end
   end
 
+  it 'EMP: new' do
+    emp1 = Emp.new
+    emp1.empno = 1
+    emp1.foo = 'bar'
+    emp1.zoo = 'baz'
+    emp1.save.should be_true
+
+    emp2 = Emp.new
+    emp2.empno = 2
+    emp2.hoge = 'fuga'
+    emp2.hogera = 'hogehoge'
+    emp2.save!
+
+    emps = Emp.find(:all, :order => 'empno')
+    emps.length.should == Emp::DATA.length + 2
+
+    emps.each_with_index do |emp, i|
+      case emp.empno
+      when 1
+        emp = emp.attributes
+        emp.delete('id').should_not be_nil
+        emp.delete('_id').should_not be_nil
+        emp.should == { 'empno' => 1, 'foo' => 'bar', 'zoo' => 'baz' }
+      when 2
+        emp = emp.attributes
+        emp.delete('id').should_not be_nil
+        emp.delete('_id').should_not be_nil
+        emp.should == { 'empno' => 2, 'hoge' => 'fuga', 'hogera' => 'hogehoge' }
+      else
+        emp.should == Emp::DATA[i - 2]
+      end
+    end
+  end
+
   after do
     Emp.teardown
     Dept.teardown
