@@ -194,16 +194,16 @@ describe ActiveMongo do
   end
 
   it 'DEPT: create' do
-    dept1 = Dept.create(
+    Dept.create(
       :deptno => 1,
-      :foo = 'bar',
-      :zoo = 'baz'
+      :foo => 'bar',
+      :zoo => 'baz'
     ).should be_true
 
     Dept.create!(
-      :deptno => 1,
-      :hoge = 'fuga',
-      :hogera = 'hogehoge'
+      :deptno => 2,
+      :hoge => 'fuga',
+      :hogera => 'hogehoge'
     )
 
     depts = Dept.find(:all, :order => 'deptno')
