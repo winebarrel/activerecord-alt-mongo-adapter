@@ -466,6 +466,24 @@ describe ActiveMongo do
     depts.map {|i| i['deptno'] }.should == [2] + Dept::DATA.map {|i| i['deptno'] }
   end
 
+  it 'DEPT: not exists' do
+    Dept.create(
+      :deptno => 1,
+      :foo => 'bar',
+      :zoo => 'baz'
+    ).should be_true
+
+    Dept.create!(
+      :deptno => 2,
+      :hoge => 'fuga',
+      :hogera => 'hogehoge'
+    )
+
+    depts = Dept.find(:all, :conditions => ['not foo exists ?', true], :order => 'deptno')
+    depts.length.should == Dept::DATA.length + 1
+    depts.map {|i| i['deptno'] }.should == [2] + Dept::DATA.map {|i| i['deptno'] }
+  end
+
   after do
     Emp.teardown
     Dept.teardown
