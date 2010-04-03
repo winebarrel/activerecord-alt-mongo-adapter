@@ -299,6 +299,16 @@ describe ActiveMongo do
     end
   end
 
+  it 'EMP: find distinct' do
+    emps = Emp.find(:all, :select => 'distinct job').sort_by {|i| i['job'] }
+    expected = Emp::DATA.map {|i| i['job'] }.sort.uniq
+    emps.length.should == expected.length
+
+    emps.each_with_index do |emp, i|
+      emp.job.should == expected[i]
+    end
+  end
+
   after do
     Emp.teardown
     Dept.teardown

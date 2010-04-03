@@ -38,11 +38,16 @@ module ActiveRecord
           coll = @connection.collection(table)
 
           count = parsed_sql[:count]
+          distinct = parsed_sql[:distinct]
           selector = query2selector(parsed_sql)
           opts = query2opts(parsed_sql)
 
           if count and selector.empty? and opts.empty?
             [{count => coll.count}]
+          elsif distinct
+            coll.distinct(distinct, selector).map do |row|
+              {distinct => row}
+            end
           else
             rows = []
 

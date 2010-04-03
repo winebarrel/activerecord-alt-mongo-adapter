@@ -15,6 +15,10 @@ rule
                           {
                             {:command => :select, :table => val[3], :select_list => val[1], :condition => val[4], :order => val[5], :limit => val[6], :offset => val[7]}
                           }
+                        | SELECT DISTINCT id FROM id where_clause
+                          {
+                            {:command => :select, :table => val[4], :select_list => val[2], :distinct => val[2], :condition => val[5]}
+                          }
                         | SELECT count_clause FROM id where_clause order_by_clause limit_clause offset_clause
                           {
                             {:command => :select, :table => val[3], :count => val[1], :condition => val[4], :order => val[5], :limit => val[6], :offset => val[7]}
@@ -218,6 +222,7 @@ KEYWORDS = %w(
   COUNT
   DELETE
   DESC
+  DISTINCT
   EXISTS
   FROM
   IN
