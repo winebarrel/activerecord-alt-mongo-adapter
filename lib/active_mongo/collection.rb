@@ -61,6 +61,12 @@ module ActiveMongo
           EOS
         end
       }
+
+      mod.instance_eval %{
+        def open
+          yield(self.connection.raw_connection.collection(self.table_name))
+        end
+      }
     end
   end
 end
